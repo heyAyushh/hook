@@ -1,0 +1,17 @@
+[Unit]
+Description=Firecracker Boot Logger
+After=local-fs.target
+Before=firecracker-network.service
+
+[Service]
+Type=oneshot
+User=root
+Group=root
+RemainAfterExit=yes
+Environment=FIRECRACKER_REPO_ROOT=/opt/webhook-relay
+EnvironmentFile=-/etc/firecracker/runtime.env
+EnvironmentFile=-/etc/firecracker/watchdog.env
+ExecStart=/usr/bin/env bash -lc 'exec "${FIRECRACKER_REPO_ROOT}/firecracker/watchdog/boot-logger.sh"'
+
+[Install]
+WantedBy=multi-user.target

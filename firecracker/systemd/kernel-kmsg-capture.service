@@ -1,0 +1,20 @@
+[Unit]
+Description=Kernel /dev/kmsg capture (independent of journald)
+After=local-fs.target
+Wants=local-fs.target
+
+[Service]
+Type=simple
+User=root
+Group=root
+Environment=FIRECRACKER_REPO_ROOT=/opt/webhook-relay
+EnvironmentFile=-/etc/firecracker/runtime.env
+EnvironmentFile=-/etc/firecracker/kernel-kmsg.env
+ExecStart=/usr/bin/env bash -lc 'exec python3 "${FIRECRACKER_REPO_ROOT}/firecracker/watchdog/kernel-kmsg-capture.py"'
+Restart=always
+RestartSec=2
+StandardOutput=null
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

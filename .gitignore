@@ -1,7 +1,9 @@
 /target
+/dist
 .env
 deploy/env/*.env
 scripts/__pycache__/
+**/__pycache__/
 certs/*.crt
 certs/*.key
 certs/*.csr

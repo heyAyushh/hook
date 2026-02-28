@@ -1,0 +1,18 @@
+[Unit]
+Description=Firecracker Shutdown Logger
+DefaultDependencies=no
+Before=shutdown.target reboot.target halt.target
+
+[Service]
+Type=oneshot
+User=root
+Group=root
+TimeoutStartSec=30
+RemainAfterExit=yes
+Environment=FIRECRACKER_REPO_ROOT=/opt/webhook-relay
+EnvironmentFile=-/etc/firecracker/runtime.env
+EnvironmentFile=-/etc/firecracker/watchdog.env
+ExecStart=/usr/bin/env bash -lc 'exec "${FIRECRACKER_REPO_ROOT}/firecracker/watchdog/shutdown-logger.sh"'
+
+[Install]
+WantedBy=halt.target reboot.target shutdown.target

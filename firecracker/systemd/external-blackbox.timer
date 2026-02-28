@@ -1,0 +1,11 @@
+[Unit]
+Description=External Black-Box Timer (run on separate host)
+
+[Timer]
+Unit=external-blackbox.service
+OnBootSec=1min
+OnUnitActiveSec=1min
+AccuracySec=10s
+
+[Install]
+WantedBy=timers.target

@@ -1,0 +1,14 @@
+[Unit]
+Description=External Black-Box Check (run on separate host)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+User=root
+Group=root
+Environment=FIRECRACKER_REPO_ROOT=/opt/webhook-relay
+EnvironmentFile=-/etc/firecracker/runtime.env
+EnvironmentFile=-/etc/firecracker/alerts.env
+EnvironmentFile=-/etc/firecracker/external-blackbox.env
+ExecStart=/usr/bin/env bash -lc 'exec "${FIRECRACKER_REPO_ROOT}/firecracker/watchdog/external-blackbox.sh"'
