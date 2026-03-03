@@ -72,7 +72,7 @@ fn tail_logs(context: &AppContext, arguments: &LogsTailArgs) -> Result<()> {
         command
             .arg("-f")
             .arg("-u")
-            .arg("webhook-relay.service")
+            .arg("hook-serve.service")
             .arg("-u")
             .arg("kafka-openclaw-hook.service")
             .arg("-u")
@@ -189,7 +189,7 @@ fn collect_journal_logs(
     }
 
     for unit in [
-        "webhook-relay.service",
+        "hook-serve.service",
         "kafka-openclaw-hook.service",
         "firecracker@relay.service",
     ] {

@@ -1,5 +1,5 @@
 [package]
-name = "webhook-relay"
+name = "hook-serve"
 version = "0.2.0"
 edition = "2024"
 description = "Security-focused webhook ingress relay for GitHub/Linear to Kafka and OpenClaw."

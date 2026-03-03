@@ -699,6 +699,27 @@ dependencies = [
 ]
 
 [[package]]
+name = "hook-serve"
+version = "0.2.0"
+dependencies = [
+ "anyhow",
+ "axum",
+ "chrono",
+ "futures-util",
+ "ipnet",
+ "rdkafka",
+ "relay-core",
+ "serde",
+ "serde_json",
+ "tempfile",
+ "tokio",
+ "tower_governor",
+ "tracing",
+ "tracing-subscriber",
+ "uuid",
+]
+
+[[package]]
 name = "http"
 version = "1.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2500,27 +2521,6 @@ checksum = "5a6580f308b1fad9207618087a65c04e7a10bc77e02c8e84e9b00dd4b12fa0bb"
 dependencies = [
  "js-sys",
  "wasm-bindgen",
-]
-
-[[package]]
-name = "webhook-relay"
-version = "0.2.0"
-dependencies = [
- "anyhow",
- "axum",
- "chrono",
- "futures-util",
- "ipnet",
- "rdkafka",
- "relay-core",
- "serde",
- "serde_json",
- "tempfile",
- "tokio",
- "tower_governor",
- "tracing",
- "tracing-subscriber",
- "uuid",
 ]
 
 [[package]]

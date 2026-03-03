@@ -27,17 +27,17 @@ use tower_governor::governor::GovernorConfigBuilder;
 use tracing::{Level, debug, info, warn};
 use tracing_subscriber::EnvFilter;
 use uuid::Uuid;
-use webhook_relay::client_ip::TrustedClientIpKeyExtractor;
-use webhook_relay::config::{
+use hook_serve::client_ip::TrustedClientIpKeyExtractor;
+use hook_serve::config::{
     Config, RuntimeIngressAdapter, RuntimeServePluginConfig, ServeRouteRule,
 };
-use webhook_relay::envelope::build_envelope;
-use webhook_relay::idempotency::{IdempotencyDecision, IdempotencyStore};
-use webhook_relay::middleware::SourceRateLimiter;
-use webhook_relay::producer::{
+use hook_serve::envelope::build_envelope;
+use hook_serve::idempotency::{IdempotencyDecision, IdempotencyStore};
+use hook_serve::middleware::SourceRateLimiter;
+use hook_serve::producer::{
     KafkaPublisher, PublishJob, ensure_required_topics, run_publish_worker,
 };
-use webhook_relay::sources::{
+use hook_serve::sources::{
     ValidationError, handler_for_source, has_handler, known_source_names, normalize_source_name,
 };
 
@@ -217,7 +217,7 @@ async fn main() -> Result<()> {
             .map(|adapter| adapter.path.as_str()),
         trust_proxy_headers = state.config.trust_proxy_headers,
         trusted_proxy_cidrs = ?state.config.trusted_proxy_cidrs,
-        "webhook relay listening"
+        "hook serve listening"
     );
 
     let server = axum::serve(
@@ -228,7 +228,7 @@ async fn main() -> Result<()> {
         let _ = tokio::signal::ctrl_c().await;
     });
 
-    server.await.context("serve webhook relay")?;
+    server.await.context("serve hook serve")?;
 
     drop(state);
     match timeout(Duration::from_secs(30), publish_worker_handle).await {
@@ -1266,7 +1266,7 @@ fn setup_tracing() {
 mod tests {
     use super::{apply_serve_plugins, build_event_meta, ip_refill_period_ms, wildcard_matches};
     use relay_core::model::EventMeta;
-    use webhook_relay::config::RuntimeServePluginConfig;
+    use hook_serve::config::RuntimeServePluginConfig;
 
     #[test]
     fn ip_limit_refill_period_matches_100_per_minute() {

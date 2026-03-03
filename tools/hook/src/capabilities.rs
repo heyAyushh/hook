@@ -58,7 +58,7 @@ pub fn detect_serve_capability(context: &AppContext) -> RoleCapability {
 
     let backend = resolve_serve_backend(context);
     if backend.is_none() {
-        reasons.push("no serve backend found (webhook-relay/cargo fallback)".to_string());
+        reasons.push("no serve backend found (hook-serve/cargo fallback)".to_string());
     }
 
     if context.resolve_value(None, "KAFKA_BROKERS").is_none() {
@@ -177,19 +177,19 @@ pub fn resolve_serve_backend(context: &AppContext) -> Option<String> {
         }
     }
 
-    if executable_exists("webhook-relay") {
-        return Some("webhook-relay".to_string());
+    if executable_exists("hook-serve") {
+        return Some("hook-serve".to_string());
     }
 
     if let Some(repo_root) = &context.repo_root {
-        let local_binary = repo_root.join("target/release/webhook-relay");
+        let local_binary = repo_root.join("target/release/hook-serve");
         if is_executable_file(&local_binary) {
             return Some(local_binary.display().to_string());
         }
 
         if executable_exists("cargo") && repo_root.join("src/main.rs").exists() {
             return Some(format!(
-                "cargo run --manifest-path {} -p webhook-relay --release",
+                "cargo run --manifest-path {} -p hook-serve --release",
                 repo_root.join("Cargo.toml").display()
             ));
         }
