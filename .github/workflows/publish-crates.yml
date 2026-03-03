@@ -1,0 +1,73 @@
+name: Publish Crates
+
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Run publish dry-run only"
+        required: true
+        type: boolean
+        default: true
+      publish_relay_core:
+        description: "Publish relay-core"
+        required: true
+        type: boolean
+        default: true
+      publish_webhook_relay:
+        description: "Publish webhook-relay"
+        required: true
+        type: boolean
+        default: true
+      publish_kafka_openclaw_hook:
+        description: "Publish kafka-openclaw-hook"
+        required: true
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+  id-token: write
+
+concurrency:
+  group: publish-crates
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    environment: crates-io
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends cmake pkg-config libssl-dev libcurl4-openssl-dev
+
+      - name: Install Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Cache cargo artifacts
+        uses: Swatinem/rust-cache@v2
+
+      - name: Publish dry-run validation
+        run: |
+          args=(--dry-run)
+          [ "${{ inputs.publish_relay_core }}" = "true" ] || args+=(--skip-relay-core)
+          [ "${{ inputs.publish_webhook_relay }}" = "true" ] || args+=(--skip-webhook-relay)
+          [ "${{ inputs.publish_kafka_openclaw_hook }}" = "true" ] || args+=(--skip-kafka-openclaw-hook)
+          scripts/publish-crates.sh "${args[@]}"
+
+      - name: Publish to crates.io
+        if: ${{ inputs.dry_run == false }}
+        env:
+          CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}
+        run: |
+          args=()
+          [ "${{ inputs.publish_relay_core }}" = "true" ] || args+=(--skip-relay-core)
+          [ "${{ inputs.publish_webhook_relay }}" = "true" ] || args+=(--skip-webhook-relay)
+          [ "${{ inputs.publish_kafka_openclaw_hook }}" = "true" ] || args+=(--skip-kafka-openclaw-hook)
+          scripts/publish-crates.sh "${args[@]}"

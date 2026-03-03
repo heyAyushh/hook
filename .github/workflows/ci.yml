@@ -41,11 +41,19 @@ jobs:
       - name: Release build
         run: cargo build --workspace --release
 
+      - name: Build release artifacts
+        run: scripts/build-release-binaries.sh
+
+      - name: Crates publish dry-run
+        run: scripts/publish-crates.sh --dry-run
+
       - name: Shell syntax check
         run: |
           bash -n scripts/init.sh
           bash -n scripts/gen-certs.sh
           bash -n scripts/smoke-test-rust.sh
+          bash -n scripts/build-release-binaries.sh
+          bash -n scripts/publish-crates.sh
 
       - name: Smoke script help
         run: scripts/smoke-test-rust.sh --help

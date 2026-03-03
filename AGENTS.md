@@ -11,9 +11,15 @@
   - `forwarder.rs`: POST `/hooks/agent` with retry policy.
   - `dlq.rs`: publish exhausted failures to DLQ topic.
 - `crates/relay-core/`: shared models/signatures/sanitization logic.
+- `firecracker/`: Firecracker microVM artifacts for binary-first deployment.
+  - `runtime/`: portable jailer launcher, cleanup, overwatcher, broker inventory helpers.
+  - `systemd/`: host service templates (`firecracker@.service`, network, proxy-mux, watchdog timer, external checker units) and env examples.
+  - `watchdog/`: local watchdog (auto-recovery + heartbeat), boot/shutdown loggers, alert helper, and external blackbox/chisel checker scripts.
 - `deploy/nginx/`: TLS termination config.
-- `systemd/`: runtime unit files.
-- `scripts/gen-certs.sh`: mTLS bootstrap helper.
+- `systemd/`: runtime unit files for non-Firecracker binary deployment.
+- `skills/`: operational skills and runbooks.
+  - `kafka-kraft-firecracker/`: deploy single-node Kafka KRaft in a Firecracker VM.
+- `references/`: technical guides (boot, hooks, sanitization, release publishing, Tailscale).
 - `memory/coder-tasks.md`: orchestrator shared state board.
 
 ## Build, Test, and Dev Commands
@@ -22,10 +28,15 @@
 - Lint (if installed): `cargo clippy --workspace --all-targets -- -D warnings`
 - Test: `cargo test --workspace`
 - Release build: `cargo build --workspace --release`
+- Build release archives: `scripts/build-release-binaries.sh`
+- Crates publish dry-run: `scripts/publish-crates.sh --dry-run`
 - Generate mTLS certs: `scripts/gen-certs.sh`
 - Bootstrap full local setup: `scripts/init.sh --up`
 - Start relay stack: `docker compose -f docker-compose.yml up --build`
 - Start relay dev override stack: `docker compose -f docker-compose.yml -f docker-compose.dev.yml up --build`
+- Shell syntax check: `bash -n <script>` (CI checks init, gen-certs, smoke-test-rust, build-release-binaries, publish-crates)
+- Firecracker host network setup: `sudo scripts/setup-firecracker-bridge-network.sh`
+- Firecracker host network teardown: `sudo scripts/teardown-firecracker-bridge-network.sh`
 
 ## Coding Standards
 
