@@ -1,7 +1,21 @@
 [package]
 name = "webhook-relay"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2024"
+description = "Security-focused webhook ingress relay for GitHub/Linear to Kafka and OpenClaw."
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/heyAyushh/webhook-relay"
+readme = "README.md"
+rust-version = "1.85"
+keywords = ["webhook", "kafka", "axum", "security", "openclaw"]
+categories = ["web-programming::http-server", "network-programming"]
+include = [
+    "src/**",
+    "Cargo.toml",
+    "README.md",
+    "LICENSE-MIT",
+    "LICENSE-APACHE",
+]
 
 [workspace]
 members = [
@@ -15,8 +29,8 @@ anyhow = "1.0.98"
 axum = { version = "0.8.4", features = ["macros"] }
 chrono = { version = "0.4.42", default-features = false, features = ["clock"] }
 ipnet = "2.11.0"
-rdkafka = { version = "0.38.0", features = ["cmake-build", "ssl-vendored"] }
-relay-core = { path = "crates/relay-core" }
+rdkafka = { version = "0.38.0", features = ["cmake-build"] }
+relay-core = { version = "0.2.0", path = "crates/relay-core" }
 serde = { version = "1.0.219", features = ["derive"] }
 serde_json = "1.0.140"
 tokio = { version = "1.47.1", features = ["full"] }

@@ -1,7 +1,19 @@
 [package]
 name = "relay-core"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2024"
+description = "Shared models and security primitives for the webhook-relay workspace."
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/heyAyushh/webhook-relay"
+readme = "README.md"
+rust-version = "1.85"
+keywords = ["webhook", "security", "hmac", "sanitize", "kafka"]
+categories = ["parser-implementations", "data-structures"]
+include = [
+    "src/**",
+    "Cargo.toml",
+    "README.md",
+]
 
 [dependencies]
 hex = "0.4.3"
