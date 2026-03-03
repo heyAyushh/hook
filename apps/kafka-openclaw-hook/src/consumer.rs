@@ -16,15 +16,25 @@ pub struct KafkaConsumer {
 
 impl KafkaConsumer {
     pub fn from_config(config: &Config, forwarder: Forwarder, dlq: DlqProducer) -> Result<Self> {
-        let consumer = ClientConfig::new()
+        let mut client_config = ClientConfig::new();
+        client_config
             .set("bootstrap.servers", &config.kafka_brokers)
             .set("group.id", &config.kafka_group_id)
             .set("enable.auto.commit", "false")
             .set("auto.offset.reset", "latest")
-            .set("security.protocol", "ssl")
-            .set("ssl.certificate.location", &config.kafka_tls_cert)
-            .set("ssl.key.location", &config.kafka_tls_key)
-            .set("ssl.ca.location", &config.kafka_tls_ca)
+            .set("security.protocol", &config.kafka_security_protocol);
+
+        if let Some(mechanism) = &config.kafka_sasl_mechanism {
+            client_config.set("sasl.mechanism", mechanism);
+        }
+        if let Some(username) = &config.kafka_sasl_username {
+            client_config.set("sasl.username", username);
+        }
+        if let Some(password) = &config.kafka_sasl_password {
+            client_config.set("sasl.password", password);
+        }
+
+        let consumer = client_config
             .create::<StreamConsumer>()
             .context("create kafka stream consumer")?;
 
@@ -78,6 +88,13 @@ impl KafkaConsumer {
                 .publish_failed(&envelope, &error.to_string())
                 .await
                 .context("publish dlq envelope")?;
+        } else {
+            info!(
+                event_id = %envelope.id,
+                source = %envelope.source,
+                event_type = %envelope.event_type,
+                "forwarded to openclaw"
+            );
         }
 
         self.consumer

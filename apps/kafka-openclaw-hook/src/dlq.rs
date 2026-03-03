@@ -15,14 +15,24 @@ pub struct DlqProducer {
 
 impl DlqProducer {
     pub fn from_config(config: &Config) -> Result<Self> {
-        let producer = ClientConfig::new()
+        let mut client_config = ClientConfig::new();
+        client_config
             .set("bootstrap.servers", &config.kafka_brokers)
-            .set("security.protocol", "ssl")
-            .set("ssl.certificate.location", &config.kafka_tls_cert)
-            .set("ssl.key.location", &config.kafka_tls_key)
-            .set("ssl.ca.location", &config.kafka_tls_ca)
+            .set("security.protocol", &config.kafka_security_protocol)
             .set("message.timeout.ms", "5000")
-            .set("queue.buffering.max.ms", "5")
+            .set("queue.buffering.max.ms", "5");
+
+        if let Some(mechanism) = &config.kafka_sasl_mechanism {
+            client_config.set("sasl.mechanism", mechanism);
+        }
+        if let Some(username) = &config.kafka_sasl_username {
+            client_config.set("sasl.username", username);
+        }
+        if let Some(password) = &config.kafka_sasl_password {
+            client_config.set("sasl.password", password);
+        }
+
+        let producer = client_config
             .create::<FutureProducer>()
             .context("create dlq producer")?;
 
