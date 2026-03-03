@@ -1,10 +1,18 @@
-# Webhook Relay -> AutoMQ -> OpenClaw
+# OpenClaw events ping pong 
 
-Production-oriented Rust event pipeline:
+<p align="center">
+  <img src="assets/banner.jpg" alt="OpenClaw events ping pong banner" />
+</p>
+
+> Warning
+> This project is experimental. APIs, payload shapes, and runtime behavior may change without notice.
+> Breaking changes can happen between releases.
+
+Webhooks -> Relay -> Kafka -> OpenClaw
 
 1. `webhook-relay` (public VM): validates webhook auth and publishes normalized envelopes to AutoMQ/Kafka.
 2. `kafka-openclaw-hook` (local, outbound only): consumes `webhooks.*`, forwards to OpenClaw `/hooks/coder`.
-3. Orchestrator session (`coder:orchestrator`): receives all events and coordinates worker subagents.
+3. Orchestrator session (`agent:orchestrator`): receives all events and coordinates worker subagents.
 
 ## Architecture
 
