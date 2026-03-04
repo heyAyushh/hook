@@ -4,7 +4,7 @@ description: >
   Provision and operate Apache Kafka in KRaft mode inside a Firecracker microVM
   without Docker, including host networking, guest bootstrap, systemd service,
   and security checks. Use when setting up a lightweight isolated Kafka broker
-  for internal pipelines such as webhook relay ingestion.
+  for internal pipelines such as hook serve/relay/smash Kafka core transport.
 ---
 
 # Kafka KRaft on Firecracker

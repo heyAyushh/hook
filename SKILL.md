@@ -1,61 +1,56 @@
 ---
 name: webhook-relay
 description: >
-  Build, maintain, and operate the Rust webhook relay workspace that bridges
-  GitHub/Linear webhooks to AutoMQ and forwards to OpenClaw via kafka-openclaw-hook.
-  Use when editing ingress auth/validation, rate limits, dedup/cooldown logic,
-  sanitizer behavior, Kafka publish/consume flow, OpenClaw forwarding payloads,
-  Firecracker microVM deployment, or systemd-based deployment docs for this repo.
+  Build, maintain, and operate the contract-driven hook workspace with
+  serve/relay/smash roles, Kafka core transport, and plug-and-play adapters.
+  Use when editing runtime behavior, contract validation, adapter/plugin
+  execution, or deployment documentation.
 ---
 
 # Webhook Relay Workspace Skill
 
 ## Workspace Map
 
-- `src/`: `webhook-relay` ingress service (`POST /webhook/{source}`, publish to Kafka)
-- `apps/kafka-openclaw-hook/`: outbound-only consumer from Kafka to OpenClaw `/hooks/agent`
-- `crates/relay-core/`: shared models, signature verification, timestamp checks, sanitizer, key helpers
-- `systemd/`: production unit files for binary-first deployment
-- `firecracker/`: microVM artifacts for relay and Kafka broker deployment in Firecracker
-  - `runtime/`: jailer launcher, cleanup, overwatcher, broker inventory
-  - `systemd/`: host service templates, watchdog timer, external checker units, env examples
-  - `watchdog/`: local watchdog (auto-recovery + heartbeat), boot/shutdown loggers, alert helper, external blackbox/chisel checkers
-- `skills/kafka-kraft-firecracker/`: operational skill for single-node Kafka KRaft in Firecracker
-- `references/`: technical guides (hooks, sanitization, boot, release publishing)
+- `src/`: serve runtime (`webhook-relay`)
+- `tools/hook/`: operator CLI for role execution and ops workflows
+- `apps/default-openclaw/`: canonical compatibility contract
+- `apps/kafka-openclaw-hook/`: compatibility wrapper binary for smash runtime
+- `crates/relay-core/`: contracts, validator, shared envelope/security primitives
+- `crates/hook-runtime/`: smash runtime and adapter execution engine
+- `config/kafka-core.toml`: Kafka core config reference
+- `systemd/`, `firecracker/`, `scripts/`: deployment and operations
 
 ## Use This Skill To
 
-- add or change webhook-source auth and event-type parsing
-- tune ingress rate limits, dedup, cooldown, and replay-window checks
-- modify queue/worker publish retry behavior
-- adjust consumer retry and DLQ behavior
-- maintain compatibility with GitHub and Linear webhook payloads
-- deploy or update relay and Kafka broker inside Firecracker microVMs
+- evolve contract schema and profile semantics
+- implement or validate serve ingress adapter behavior
+- implement or validate smash egress adapter behavior
+- add or change plugin execution semantics on either side
+- tune fail-closed validation and runtime safety defaults
+- update operator docs and runbooks after behavioral changes
 
 ## Safety Invariants
 
-- verify signatures on raw body bytes before JSON parsing
-- never log full untrusted webhook payloads on auth failures
-- keep unknown source paths returning `404`
-- commit consumer offsets only after forward attempt and DLQ fallback path
-- treat sanitize logic as zero-trust boundary and preserve injection flags
+- strict fail-closed validation unless debug mode is explicit
+- unsupported drivers rejected only when active in selected profile
+- Kafka remains mandatory transport between serve and smash
+- do not log sensitive secrets/tokens
+- preserve required-destination delivery semantics for smash
 
 ## Fast Workflow
 
-1. Edit source-specific logic in `src/sources/` or `crates/relay-core/`.
-2. Keep envelope contracts in `crates/relay-core/src/model.rs` backward compatible.
-3. Update docs in root `README.md` and crate-level READMEs when behavior changes.
-4. Run:
-   - `cargo fmt --all`
-   - `cargo clippy --workspace --all-targets -- -D warnings`
-   - `cargo test --workspace`
-   - `cargo build --workspace --release`
+1. Make the smallest change in the owning module.
+2. Update contract/runtime docs when behavior changes.
+3. Run:
+- `cargo fmt --all`
+- `cargo clippy --workspace --all-targets -- -D warnings`
+- `cargo test --workspace`
 
-## Component Docs
+## Key Docs
 
-- `README.md` (workspace architecture and ops)
-- `apps/kafka-openclaw-hook/README.md` and `apps/kafka-openclaw-hook/SKILL.md`
-- `crates/relay-core/README.md` and `crates/relay-core/SKILL.md`
-- `firecracker/README.md` (Firecracker deployment flow and host orchestration templates)
-- `skills/kafka-kraft-firecracker/SKILL.md` (Kafka KRaft on Firecracker operational skill)
-- `references/release-publishing.md` (binary and crates release workflow)
+- `README.md`
+- `docs/CHANGELOG.md`
+- `docs/spec.md`
+- `tools/hook/README.md`
+- `crates/relay-core/README.md`
+- `crates/hook-runtime/README.md`

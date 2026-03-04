@@ -1,42 +1,33 @@
 # relay-core
 
-Shared Rust library for webhook relay services.
+Shared Rust library for contracts, validation, envelope model, and security primitives.
 
-## Purpose
+## Modules
 
-`relay-core` contains source-agnostic primitives reused by both runtime apps:
+- `contract.rs`: app contract schema (`serve`, `smash`, profiles, transports, policies).
+- `contract_validator.rs`: active-profile validation; fail-closed on security-critical issues; unsupported drivers rejected only when active.
+- `model.rs`: `EventEnvelope`, `EventMeta`, `DlqEnvelope`, source/topic helpers.
+- `signatures.rs`: constant-time signature/token verification.
+- `sanitize.rs`: zero-trust payload sanitization and flags.
+- `timestamps.rs`: timestamp-window validation for replay protection.
+- `keys.rs`: dedup and cooldown key helpers.
+- `kafka_config.rs`: shared Kafka core config loader.
 
-- `model.rs`: source helpers and envelope schemas (`WebhookEnvelope`, `DlqEnvelope`)
-- `signatures.rs`: constant-time signature/token verification helpers
-- `timestamps.rs`: Linear replay-window extraction/validation
-- `sanitize.rs`: zero-trust payload sanitizer with injection pattern detection
-- `keys.rs`: dedup/cooldown key-shape helpers
+## Design Constraints
 
-## Design Principles
+- Backward-compatible envelope serialization.
+- Strict validation by default (`validation_mode = strict`).
+- Security checks fail closed.
 
-- Fail closed on malformed auth/timestamp inputs.
-- Keep signature checks constant-time for equal-length comparisons.
-- Keep sanitizer behavior explicit and test-backed.
-- Preserve key formats for parity with existing dedup/cooldown behavior.
-
-## Usage
-
-Example:
-
-```rust
-use relay_core::model::{DEFAULT_SOURCE_TOPIC_PREFIX, source_topic_name};
-use relay_core::signatures::verify_github_signature;
-use relay_core::sanitize::sanitize_payload;
-
-let _topic = source_topic_name(DEFAULT_SOURCE_TOPIC_PREFIX, "github");
-let _verified = verify_github_signature("secret", br#"{}"#, "sha256=...");
-let _sanitized = sanitize_payload("github", &serde_json::json!({})).unwrap();
-```
-
-## Test
-
-From workspace root:
+## Build and Test
 
 ```bash
 cargo test -p relay-core
 ```
+
+## Related
+
+- `docs/spec.md`
+- `apps/default-openclaw/contract.toml`
+- `src/main.rs`
+- `crates/hook-runtime/src/smash/`

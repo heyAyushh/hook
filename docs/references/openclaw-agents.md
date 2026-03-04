@@ -1,5 +1,8 @@
 # OpenClaw Agent Configuration
 
+> **Status (2026-03-04):** Concepts in this document still apply, but any references to relay shell scripts should be mapped to the contract-driven `hook serve/relay/smash` runtime.
+
+
 Once webhooks reach OpenClaw via the relay pipeline (see [openclaw-relay.md](openclaw-relay.md)), the gateway invokes the `agent` profile. Both GitHub and Linear events route to the same profile — the transforms provide different context (code review vs project management), but execution is unified.
 
 OpenClaw agents also support **sub-agents** (e.g. dedicated GitHub and Linear agents that proactively watch and interact with the relay, using an existing agent or spawning one if not present). See [openclaw-subagents.md](openclaw-subagents.md).

@@ -1,10 +1,13 @@
 # Agent Orchestrator Contract
 
+> **Status (2026-03-04):** This orchestrator note is legacy. `memory/agent-tasks.md` was removed from the active runtime path; use current role contracts and external orchestration state instead.
+
+
 Session key: `agent:orchestrator`
 
 ## Responsibilities
 
-1. Read `memory/agent-tasks.md`.
+1. Read orchestrator task state from the currently configured external board/store.
 2. Decide inline handling vs worker spawn.
 3. Spawn worker sessions with event context and task board snapshot.
 4. Track workers with `subagents(action=list)`.

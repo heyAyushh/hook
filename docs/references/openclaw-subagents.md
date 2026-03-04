@@ -1,5 +1,8 @@
 # OpenClaw Sub-Agents (GitHub & Linear)
 
+> **Status (2026-03-04):** Concepts in this document still apply, but any references to relay shell scripts should be mapped to the contract-driven `hook serve/relay/smash` runtime.
+
+
 OpenClaw agents can use **sub-agents**: dedicated agents for a specific source (e.g. GitHub, Linear) that proactively watch and interact with the relay. A sub-agent can either be an existing agent or one that is spawned on demand when not already present.
 
 ## Why Sub-Agents
