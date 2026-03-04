@@ -6,7 +6,7 @@ readonly DEFAULT_ROOTFS_SIZE_MB=256
 readonly DEFAULT_DATA_SIZE_MB=1024
 readonly DEFAULT_ROOTFS_PATH="out/firecracker/rootfs.ext4"
 readonly DEFAULT_DATA_PATH="out/firecracker/data.ext4"
-readonly DEFAULT_BINARY_PATH="target/release/webhook-relay"
+readonly DEFAULT_BINARY_PATH="target/release/hook-serve"
 
 BINARY_PATH="${DEFAULT_BINARY_PATH}"
 ROOTFS_PATH="${DEFAULT_ROOTFS_PATH}"
@@ -30,7 +30,7 @@ usage() {
 Usage: scripts/build-firecracker-rootfs.sh [options]
 
 Options:
-  --binary <path>      Relay binary path (default: target/release/webhook-relay)
+  --binary <path>      Relay binary path (default: target/release/hook-serve)
   --rootfs <path>      Rootfs image output path (default: out/firecracker/rootfs.ext4)
   --data <path>        Data image output path (default: out/firecracker/data.ext4)
   --rootfs-mb <size>   Rootfs size in MiB (default: 256)
@@ -111,7 +111,7 @@ main() {
   sudo install -m 0755 "${BINARY_PATH}" "${MOUNT_DIR}/init"
   sudo mkdir -p "${MOUNT_DIR}/etc"
   sudo tee "${MOUNT_DIR}/etc/hostname" >/dev/null <<'EOF_HOSTNAME'
-webhook-relay
+hook-serve
 EOF_HOSTNAME
 
   sudo umount "${MOUNT_DIR}"

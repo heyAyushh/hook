@@ -5,7 +5,7 @@ IFS=$'\n\t'
 DRY_RUN=0
 ALLOW_DIRTY=0
 SKIP_RELAY_CORE=0
-SKIP_WEBHOOK_RELAY=0
+SKIP_HOOK_SERVE=0
 SKIP_KAFKA_OPENCLAW_HOOK=0
 
 usage() {
@@ -14,9 +14,9 @@ Usage: scripts/publish-crates.sh [options]
 
 Options:
   --dry-run                     Run cargo publish --dry-run only
-  --allow-dirty                Allow publishing from a dirty worktree
+  --allow-dirty                 Allow publishing from a dirty worktree
   --skip-relay-core             Skip publishing relay-core
-  --skip-webhook-relay          Skip publishing webhook-relay
+  --skip-hook-serve             Skip publishing hook-serve
   --skip-kafka-openclaw-hook    Skip publishing kafka-openclaw-hook
 EOF_USAGE
 }
@@ -45,8 +45,8 @@ parse_args() {
         SKIP_RELAY_CORE=1
         shift
         ;;
-      --skip-webhook-relay)
-        SKIP_WEBHOOK_RELAY=1
+      --skip-hook-serve)
+        SKIP_HOOK_SERVE=1
         shift
         ;;
       --skip-kafka-openclaw-hook)
@@ -109,8 +109,8 @@ main() {
     fi
   fi
 
-  if [ "${SKIP_WEBHOOK_RELAY}" -ne 1 ]; then
-    publish_one webhook-relay
+  if [ "${SKIP_HOOK_SERVE}" -ne 1 ]; then
+    publish_one hook-serve
     if [ "${DRY_RUN}" -ne 1 ]; then
       sleep 20
     fi

@@ -13,8 +13,8 @@ on:
         required: true
         type: boolean
         default: true
-      publish_webhook_relay:
-        description: "Publish webhook-relay"
+      publish_hook_serve:
+        description: "Publish hook-serve"
         required: true
         type: boolean
         default: true
@@ -59,7 +59,7 @@ jobs:
         run: |
           args=(--dry-run)
           [ "${{ inputs.publish_relay_core }}" = "true" ] || args+=(--skip-relay-core)
-          [ "${{ inputs.publish_webhook_relay }}" = "true" ] || args+=(--skip-webhook-relay)
+          [ "${{ inputs.publish_hook_serve }}" = "true" ] || args+=(--skip-hook-serve)
           [ "${{ inputs.publish_kafka_openclaw_hook }}" = "true" ] || args+=(--skip-kafka-openclaw-hook)
           scripts/publish-crates.sh "${args[@]}"
 
@@ -70,6 +70,6 @@ jobs:
         run: |
           args=()
           [ "${{ inputs.publish_relay_core }}" = "true" ] || args+=(--skip-relay-core)
-          [ "${{ inputs.publish_webhook_relay }}" = "true" ] || args+=(--skip-webhook-relay)
+          [ "${{ inputs.publish_hook_serve }}" = "true" ] || args+=(--skip-hook-serve)
           [ "${{ inputs.publish_kafka_openclaw_hook }}" = "true" ] || args+=(--skip-kafka-openclaw-hook)
           scripts/publish-crates.sh "${args[@]}"

@@ -113,7 +113,7 @@ main() {
   mkdir -p "${artifact_dir}"
 
   local relay_bin hook_bin utility_bin
-  relay_bin="$(binary_path webhook-relay)"
+  relay_bin="$(binary_path hook-serve)"
   hook_bin="$(binary_path kafka-openclaw-hook)"
   utility_bin="$(binary_path hook)"
 
@@ -121,16 +121,16 @@ main() {
   [ -x "${hook_bin}" ] || die "missing binary: ${hook_bin}"
   [ -x "${utility_bin}" ] || die "missing binary: ${utility_bin}"
 
-  cp "${relay_bin}" "${artifact_dir}/webhook-relay"
+  cp "${relay_bin}" "${artifact_dir}/hook-serve"
   cp "${hook_bin}" "${artifact_dir}/kafka-openclaw-hook"
   cp "${utility_bin}" "${artifact_dir}/hook"
 
   (
     cd "${artifact_dir}"
-    tar -czf "webhook-relay-${TARGET}.tar.gz" "webhook-relay"
+    tar -czf "hook-serve-${TARGET}.tar.gz" "hook-serve"
     tar -czf "kafka-openclaw-hook-${TARGET}.tar.gz" "kafka-openclaw-hook"
     tar -czf "hook-${TARGET}.tar.gz" "hook"
-    rm -f "webhook-relay" "kafka-openclaw-hook" "hook"
+    rm -f "hook-serve" "kafka-openclaw-hook" "hook"
     write_checksums "SHA256SUMS-${TARGET}.txt"
   )
 
