@@ -30,7 +30,7 @@ Optional host-specific launcher override:
 ```bash
 scripts/run-firecracker.sh \
   --config out/firecracker/firecracker-config.json \
-  --launcher /opt/webhook-relay/firecracker/runtime/launch.sh \
+  --launcher /opt/hook-serve/firecracker/runtime/launch.sh \
   --launcher-profile relay
 ```
 

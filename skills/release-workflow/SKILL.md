@@ -13,10 +13,10 @@ description: >
 | Artifact | Destination |
 |---|---|
 | `hook` binary | GitHub Releases |
-| `webhook-relay` binary | GitHub Releases |
+| `hook-serve` binary | GitHub Releases |
 | `kafka-openclaw-hook` binary | GitHub Releases |
 | `relay-core` crate | crates.io |
-| `webhook-relay` crate | crates.io |
+| `hook-serve` crate | crates.io |
 | `kafka-openclaw-hook` crate | crates.io |
 
 `hook-runtime` is an internal workspace path dependency — not published to crates.io.
@@ -29,7 +29,7 @@ Update `version` in each `Cargo.toml` that is changing. All workspace members mu
 
 - `Cargo.toml` (workspace root)
 - `crates/relay-core/Cargo.toml`
-- `src/Cargo.toml` (webhook-relay)
+- `src/Cargo.toml` (hook-serve)
 - `apps/kafka-openclaw-hook/Cargo.toml`
 - `tools/hook/Cargo.toml`
 - `crates/hook-runtime/Cargo.toml`
@@ -75,7 +75,7 @@ git push origin v0.x.0
 This triggers `.github/workflows/release-binaries.yml`, which builds binaries for linux and macOS and attaches archives + checksums to a GitHub Release.
 
 Expected release assets:
-- `webhook-relay-<target>.tar.gz`
+- `hook-serve-<target>.tar.gz`
 - `kafka-openclaw-hook-<target>.tar.gz`
 - `hook-<target>.tar.gz`
 - `SHA256SUMS-<target>.txt`
@@ -108,7 +108,7 @@ scripts/publish-crates.sh
 
 Enforced publish order:
 1. `relay-core`
-2. `webhook-relay`
+2. `hook-serve`
 3. `kafka-openclaw-hook`
 
 For partial publishes, use skip flags:
@@ -124,7 +124,7 @@ scripts/publish-crates.sh --skip-relay-core
 ```bash
 # Allow a few minutes for crates.io index propagation
 cargo search relay-core
-cargo search webhook-relay
+cargo search hook-serve
 gh release view v0.x.0
 ```
 
@@ -136,7 +136,7 @@ crates.io versions are **immutable** — yank, then cut a patch:
 
 ```bash
 cargo yank --version 0.x.0 relay-core
-cargo yank --version 0.x.0 webhook-relay
+cargo yank --version 0.x.0 hook-serve
 cargo yank --version 0.x.0 kafka-openclaw-hook
 ```
 

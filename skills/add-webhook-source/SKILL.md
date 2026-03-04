@@ -219,7 +219,7 @@ mod tests {
 Run tests:
 
 ```bash
-cargo test -p webhook-relay sources::myservice
+cargo test -p hook-serve sources::myservice
 ```
 
 ---

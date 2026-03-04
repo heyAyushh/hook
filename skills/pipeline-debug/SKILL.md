@@ -12,7 +12,7 @@ description: >
 ## Pipeline Overview
 
 ```
-External → serve (webhook-relay) → webhooks.<source> → relay → webhooks.core → smash → Destination
+External → serve (hook-serve) → webhooks.<source> → relay → webhooks.core → smash → Destination
                                                                              ↘ webhooks.dlq (on failure)
 ```
 
