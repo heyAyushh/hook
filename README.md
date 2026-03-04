@@ -4,10 +4,54 @@
   <img src="assets/banner.jpg" alt="hook banner" />
 </p>
 
-`hook` is a contract-driven event workbench with three runtime roles:
-- `serve`: ingress (receive/validate/normalize/sanitize -> Kafka)
-- `relay`: Kafka core bridge
-- `smash`: egress (consume Kafka -> adapter delivery) (openclaw, agents, etc.)
+> **Experimental.** This project is under active development. APIs, contracts, and runtime behavior may change without notice.
+
+`hook` is a contract-driven event pipeline. It receives events from any source — HTTP webhooks, WebSocket frames, MCP tool calls, Kafka topics — validates and normalizes them, routes them through a durable Kafka backbone, and delivers them to any destination: message queues, HTTP services, agents, WebSocket streams, or other Kafka topics.
+
+Three composable runtime roles: `serve` (ingest and validate), `relay` (bridge and fan-in), `smash` (deliver to egress). Everything is configured through a single `contract.toml` — no code changes to add a source, swap a destination, or change a routing rule.
+
+## Where It Fits
+
+Most tools in this space solve one layer:
+
+| Tool | Layer | Gap |
+|---|---|---|
+| **nginx / Caddy / HAProxy** | Proxy and TLS | Forwards bytes, no event semantics or durability |
+| **Svix / Hookdeck** | Managed webhook delivery | Hosted SaaS, limited routing, no self-hosted pipeline model |
+| **AWS EventBridge / Google Pub/Sub** | Cloud event routing | Vendor lock-in, no self-hosted option, no ingress validation |
+| **n8n / Zapier / Make** | Visual workflow automation | GUI-driven, not versionable, not composable as infrastructure |
+| **RabbitMQ / Redis Streams** | Message queuing | No ingress layer, no source validation, no routing model |
+| **Apache Kafka alone** | Durable event streaming | No ingress, no per-source validation, no egress adapter model |
+| **socat / ngrok** | Port forwarding and tunneling | No processing, no routing, no durability |
+
+`hook` sits between raw infrastructure and managed SaaS: self-hosted, versionable, composable, and transport-agnostic.
+
+## The Contract Model
+
+The pipeline is fully described by a `contract.toml`. It is the single source of truth for what enters, how it routes, and where it exits — readable by operators, reviewable as a diff, and interpretable by automated tooling.
+
+```toml
+[profiles.my-app]
+serve_adapters  = ["http-ingress"]
+smash_adapters  = ["openclaw-output"]
+serve_routes    = ["all-to-core"]
+smash_routes    = ["core-to-openclaw"]
+```
+
+- **Profiles make intent explicit.** A profile names exactly which adapters and routes are active. Swapping a profile changes the entire pipeline behavior in one field.
+- **Unknown fields are rejected.** `deny_unknown_fields` is enforced everywhere. A misconfigured contract fails at validation, not at runtime under load.
+- **No hidden state.** Every routing decision, retry policy, and security constraint is in the file. Nothing is inferred from environment or convention.
+
+## What the Pipeline Guarantees
+
+Regardless of what sends events in or what receives them out:
+
+- **Durability** — Kafka retains every event. A downstream service going down does not lose events; delivery resumes from the last committed offset when it recovers.
+- **Burst absorption** — Ingress and egress are fully decoupled. A spike of 50 events per second at ingress does not cascade to the downstream service.
+- **Per-source validation** — Each source (GitHub, Linear, custom) has its own HMAC scheme and timestamp rules. Validation is fail-closed: an invalid signature returns 401, nothing is published.
+- **Fan-out routing** — One event can route to multiple destinations simultaneously without re-delivering from the source.
+- **Replay** — Any event retained in Kafka can be replayed against a new destination, a new configuration, or a new consumer without re-triggering the original source.
+- **Transport agnosticism** — Ingress and egress are driver-based. HTTP, WebSocket, MCP, and Kafka are interchangeable at both ends. The contract maps any source to any destination through the same routing model.
 
 See [Changelog](docs/CHANGELOG.md) for the 2026-03-04 architecture shift and plugin rollout.
 
