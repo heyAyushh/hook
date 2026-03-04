@@ -2,7 +2,7 @@
 Version: `1.1.0`
 Status: `Living` (core implemented; some profile variants remain planned)
 Date: `2026-03-04`
-Repository: `webhook-relay`
+Repository: `hook-serve`
 
 ## 1. Purpose
 This spec defines the exact architecture, contracts, validation rules, and runtime behavior for a configurable event platform inside this repository.
@@ -52,7 +52,7 @@ The relay's internal Kafka is the mandatory backbone between `serve` and `smash`
 7. Each egress adapter delivers or produces to its configured external destination (HTTP, WebSocket, MCP tool call, or external Kafka produce).
 
 ## 5. Repository Structure
-1. Service runtime remains under `src/` for `webhook-relay`.
+1. Service runtime remains under `src/` for `hook-serve`.
 2. CLI/orchestration binary lives under `tools/hook/`.
 3. Reusable shared code remains under `crates/`.
 4. App contracts live in `apps/<app>/contract.toml`.

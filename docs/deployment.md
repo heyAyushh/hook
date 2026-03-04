@@ -84,7 +84,7 @@ Archives are written to `dist/releases/`. Extract and install:
 
 ```bash
 tar -xzf dist/releases/hook-<target>.tar.gz -C /usr/local/bin/
-tar -xzf dist/releases/webhook-relay-<target>.tar.gz -C /usr/local/bin/
+tar -xzf dist/releases/hook-serve-<target>.tar.gz -C /usr/local/bin/
 ```
 
 ### Environment file
@@ -209,7 +209,7 @@ cp firecracker/systemd/*.timer /etc/systemd/system/
 cp firecracker/systemd/runtime.env.example /etc/firecracker/runtime.env
 
 # Set repo root
-echo "FIRECRACKER_REPO_ROOT=/opt/webhook-relay" > /etc/firecracker/runtime.env
+echo "FIRECRACKER_REPO_ROOT=/opt/hook-serve" > /etc/firecracker/runtime.env
 
 systemctl daemon-reload
 systemctl enable --now firecracker-network.service

@@ -140,7 +140,7 @@ Any env var name can be used as `token_env` — the contract references the vari
 
 | Variable | Default | Description |
 |---|---|---|
-| `RUST_LOG` | `info` | Log level filter. Values: `error`, `warn`, `info`, `debug`, `trace`. Supports per-module filtering: `RUST_LOG=webhook_relay=debug,info`. |
+| `RUST_LOG` | `info` | Log level filter. Values: `error`, `warn`, `info`, `debug`, `trace`. Supports per-module filtering: `RUST_LOG=hook_serve=debug,info`. |
 
 ---
 

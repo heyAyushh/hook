@@ -142,7 +142,7 @@ Updated during heartbeats. Persists across context window resets.
 - Branch naming: feature/{issue-key}-{slug}
 ```
 
-## Relationship to Webhook Relay
+## Relationship to Hook Serve
 
 ```
 Webhook event → adnanh/webhook → relay script → OpenClaw gateway

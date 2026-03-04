@@ -1,5 +1,5 @@
 ---
-name: webhook-relay
+name: hook-serve
 description: >
   Build, maintain, and operate the contract-driven hook workspace with
   serve/relay/smash roles, Kafka core transport, and plug-and-play adapters.
@@ -7,11 +7,11 @@ description: >
   execution, or deployment documentation.
 ---
 
-# Webhook Relay Workspace Skill
+# Hook Serve Workspace Skill
 
 ## Workspace Map
 
-- `src/`: serve runtime (`webhook-relay`)
+- `src/`: serve runtime (`hook-serve`)
 - `tools/hook/`: operator CLI for role execution and ops workflows
 - `apps/default-openclaw/`: canonical compatibility contract
 - `apps/kafka-openclaw-hook/`: compatibility wrapper binary for smash runtime

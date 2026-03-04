@@ -10,7 +10,7 @@ Set via `RUST_LOG`:
 RUST_LOG=info           # production default
 RUST_LOG=debug          # verbose, includes message details
 RUST_LOG=trace          # very verbose, includes raw Kafka operations
-RUST_LOG=webhook_relay=debug,info  # per-module: debug for serve, info for everything else
+RUST_LOG=hook_serve=debug,info  # per-module: debug for serve, info for everything else
 ```
 
 Valid levels: `error`, `warn`, `info`, `debug`, `trace`.

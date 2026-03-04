@@ -2,7 +2,7 @@
 
 ## Project Structure
 
-- `src/`: `webhook-relay` serve runtime (Axum, `/webhook/{source}`, health/readiness, rate limiting).
+- `src/`: `hook-serve` serve runtime (Axum, `/webhook/{source}`, health/readiness, rate limiting).
 - `tools/hook/`: CLI/operator control plane (`hook serve`, `hook relay`, `hook smash`, ops commands).
 - `apps/default-openclaw/`: canonical compatibility contract (`contract.toml`), default flow `http_webhook_ingress → kafka core → openclaw_http_output`.
 - `apps/kafka-openclaw-hook/`: compatibility binary wrapper that calls `hook_runtime::smash::run_from_env()`.

@@ -5,7 +5,7 @@ All notable changes to this repository are documented in this file.
 ## 2026-03-04
 
 ### Summary
-- Moved from a tightly coupled `webhook-relay + kafka-openclaw-hook` flow to a contract-driven `serve -> relay -> smash` model.
+- Moved from a tightly coupled `hook-serve + kafka-openclaw-hook` flow to a contract-driven `serve -> relay -> smash` model.
 - Added reusable runtime execution in `crates/hook-runtime` with adapter boundaries.
 - Added symmetric plugin pipelines on both sides:
   - `serve` ingress plugins

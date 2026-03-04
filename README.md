@@ -15,25 +15,34 @@ See [Changelog](docs/CHANGELOG.md) for the 2026-03-04 architecture shift and plu
 
 ```mermaid
 flowchart LR
-    EXT["External Sources\nHTTP · WebSocket · MCP · Kafka"]
+    EXT["External Sources<br/>HTTP · WebSocket · MCP · Kafka"]
 
-    subgraph SERVER ["Hook Server"]
-        SERVE["Serve\nwebhook-relay"]
-        RELAY["Relay"]
-        CORE["Kafka Core\nwebhooks.core"]
-        SERVE --> RELAY --> CORE
-    end
+    subgraph APP ["  App · default-openclaw  "]
+        subgraph SERVE_BOX ["Serve"]
+            SERVE["hook-serve"]
+            RELAY["Relay"]
+            SERVE --> RELAY
+        end
 
-    subgraph EGRESS ["Hook Runtime"]
-        SMASH["Smash"]
-        OUT["Destinations\nOpenClaw · MCP · WebSocket · Kafka"]
-        DLQ["DLQ\nwebhooks.dlq"]
-        SMASH --> OUT
-        SMASH -.-> DLQ
+        subgraph CORE_BOX ["Kafka Core"]
+            CORE["webhooks.core"]
+        end
+
+        subgraph EGRESS ["Smash"]
+            SMASH["Hook Runtime"]
+            OUT["Destinations<br/>OpenClaw · MCP · WebSocket · Kafka"]
+            DLQ["DLQ<br/>webhooks.dlq"]
+            SMASH --> OUT
+            SMASH -.-> DLQ
+        end
+
+        RELAY --> CORE
+        CORE --> SMASH
     end
 
     EXT --> SERVE
-    CORE --> SMASH
+
+    style APP fill:none,stroke:#aaa,stroke-dasharray:6 4
 ```
 
 Kafka remains mandatory between ingress and egress in all active profiles.
@@ -68,7 +77,7 @@ Behavior:
 
 ## Repository Layout
 
-- `src/`: `webhook-relay` serve runtime
+- `src/`: `hook-serve` serve runtime
 - `tools/hook/`: CLI/operator control plane (`serve`, `relay`, `smash`, ops commands)
 - `apps/default-openclaw/contract.toml`: canonical compatibility contract
 - `apps/kafka-openclaw-hook/`: compatibility binary wrapper for smash runtime

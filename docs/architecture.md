@@ -22,7 +22,7 @@ Kafka is mandatory between serve and smash in every profile. There is no path th
 
 ## Runtime Roles
 
-### serve (`src/`, `webhook-relay`)
+### serve (`src/`, `hook-serve`)
 
 The ingress layer. Receives raw events from external sources, authenticates them, normalises them into a typed envelope, and publishes to an internal Kafka source topic.
 
@@ -177,8 +177,8 @@ Multiple adapters can be active simultaneously on either side in any combination
 ## Component Map
 
 ```
-webhook-relay/
-├── src/                       # serve runtime (webhook-relay binary)
+hook-serve/
+├── src/                       # serve runtime (hook-serve binary)
 │   ├── main.rs                # Axum router, request handlers, Kafka publisher
 │   ├── config.rs              # env-driven config, all serve settings
 │   ├── envelope.rs            # EventEnvelope construction

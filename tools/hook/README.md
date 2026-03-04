@@ -4,7 +4,7 @@ Utility CLI for running role runtimes and operational workflows.
 
 ## Roles
 
-- `hook serve`: runs ingress (`webhook-relay`) with contract-projected serve adapters and routes.
+- `hook serve`: runs ingress (`hook-serve`) with contract-projected serve adapters and routes.
 - `hook relay`: runs Kafka-to-Kafka core bridge.
 - `hook smash`: runs smash runtime (`hook-runtime`) with contract-projected egress adapters and routes.
 

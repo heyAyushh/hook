@@ -4,11 +4,11 @@
 
 This repository currently publishes:
 
-- Binary artifact `webhook-relay` to GitHub Releases.
+- Binary artifact `hook-serve` to GitHub Releases.
 - Binary artifact `kafka-openclaw-hook` to GitHub Releases.
 - Binary artifact `hook` to GitHub Releases.
 - Crate `relay-core` to crates.io.
-- Crate `webhook-relay` to crates.io.
+- Crate `hook-serve` to crates.io.
 - Crate `kafka-openclaw-hook` to crates.io.
 
 `hook-runtime` is a workspace crate used as an internal dependency path in this repository and is not currently part of the publish script.
@@ -24,7 +24,7 @@ This repository currently publishes:
 When cutting a release, verify version updates in all relevant manifests:
 
 - Workspace crate:
-  - `Cargo.toml` (`[package].version` for `webhook-relay`)
+  - `Cargo.toml` (`[package].version` for `hook-serve`)
 - Published library crate:
   - `crates/relay-core/Cargo.toml`
 - Published app crate:
@@ -58,7 +58,7 @@ git push origin v0.2.0
 3. Artifacts and checksums are attached to release.
 
 Expected release assets include:
-- `webhook-relay-<target>.tar.gz`
+- `hook-serve-<target>.tar.gz`
 - `kafka-openclaw-hook-<target>.tar.gz`
 - `hook-<target>.tar.gz`
 - `SHA256SUMS-<target>.txt`
@@ -73,7 +73,7 @@ Expected release assets include:
 
 Publish order is enforced:
 1. `relay-core`
-2. `webhook-relay`
+2. `hook-serve`
 3. `kafka-openclaw-hook`
 
 ## CI Publish Failure Checks
